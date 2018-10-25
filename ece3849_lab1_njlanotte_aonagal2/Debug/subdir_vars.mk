@@ -11,6 +11,7 @@ CMD_SRCS += \
 C_SRCS += \
 ../Crystalfontz128x128_ST7735.c \
 ../HAL_EK_TM4C1294XL_Crystalfontz128x128_ST7735.c \
+../OscilliscopeADC.c \
 ../buttons.c \
 ../main.c \
 ../sysctl_pll.c \
@@ -19,6 +20,7 @@ C_SRCS += \
 C_DEPS += \
 ./Crystalfontz128x128_ST7735.d \
 ./HAL_EK_TM4C1294XL_Crystalfontz128x128_ST7735.d \
+./OscilliscopeADC.d \
 ./buttons.d \
 ./main.d \
 ./sysctl_pll.d \
@@ -27,6 +29,7 @@ C_DEPS += \
 OBJS += \
 ./Crystalfontz128x128_ST7735.obj \
 ./HAL_EK_TM4C1294XL_Crystalfontz128x128_ST7735.obj \
+./OscilliscopeADC.obj \
 ./buttons.obj \
 ./main.obj \
 ./sysctl_pll.obj \
@@ -35,6 +38,7 @@ OBJS += \
 OBJS__QUOTED += \
 "Crystalfontz128x128_ST7735.obj" \
 "HAL_EK_TM4C1294XL_Crystalfontz128x128_ST7735.obj" \
+"OscilliscopeADC.obj" \
 "buttons.obj" \
 "main.obj" \
 "sysctl_pll.obj" \
@@ -43,6 +47,7 @@ OBJS__QUOTED += \
 C_DEPS__QUOTED += \
 "Crystalfontz128x128_ST7735.d" \
 "HAL_EK_TM4C1294XL_Crystalfontz128x128_ST7735.d" \
+"OscilliscopeADC.d" \
 "buttons.d" \
 "main.d" \
 "sysctl_pll.d" \
@@ -51,6 +56,7 @@ C_DEPS__QUOTED += \
 C_SRCS__QUOTED += \
 "../Crystalfontz128x128_ST7735.c" \
 "../HAL_EK_TM4C1294XL_Crystalfontz128x128_ST7735.c" \
+"../OscilliscopeADC.c" \
 "../buttons.c" \
 "../main.c" \
 "../sysctl_pll.c" \

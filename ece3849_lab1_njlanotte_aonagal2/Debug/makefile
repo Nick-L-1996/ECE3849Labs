@@ -12,6 +12,7 @@ GEN_CMDS__FLAG :=
 ORDERED_OBJS += \
 "./Crystalfontz128x128_ST7735.obj" \
 "./HAL_EK_TM4C1294XL_Crystalfontz128x128_ST7735.obj" \
+"./OscilliscopeADC.obj" \
 "./buttons.obj" \
 "./main.obj" \
 "./sysctl_pll.obj" \
@@ -161,8 +162,8 @@ ece3849_lab1_njlanotte_aonagal2.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "Crystalfontz128x128_ST7735.obj" "HAL_EK_TM4C1294XL_Crystalfontz128x128_ST7735.obj" "buttons.obj" "main.obj" "sysctl_pll.obj" "tm4c1294ncpdt_startup_ccs.obj" 
-	-$(RM) "Crystalfontz128x128_ST7735.d" "HAL_EK_TM4C1294XL_Crystalfontz128x128_ST7735.d" "buttons.d" "main.d" "sysctl_pll.d" "tm4c1294ncpdt_startup_ccs.d" 
+	-$(RM) "Crystalfontz128x128_ST7735.obj" "HAL_EK_TM4C1294XL_Crystalfontz128x128_ST7735.obj" "OscilliscopeADC.obj" "buttons.obj" "main.obj" "sysctl_pll.obj" "tm4c1294ncpdt_startup_ccs.obj" 
+	-$(RM) "Crystalfontz128x128_ST7735.d" "HAL_EK_TM4C1294XL_Crystalfontz128x128_ST7735.d" "OscilliscopeADC.d" "buttons.d" "main.d" "sysctl_pll.d" "tm4c1294ncpdt_startup_ccs.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 
