@@ -1,1 +1,158 @@
 /.metadata/
+*.lock
+.jxbrowser-data/History
+.jxbrowser-data/History-journal
+.jxbrowser-data/Local Storage - EXT/file_null.localstorage
+*.prefs
+.jxbrowser-data/24301_0.lock
+.jxbrowser-data/Cache/data_0
+.jxbrowser-data/Cache/data_1
+.jxbrowser-data/Cache/data_2
+.jxbrowser-data/Cache/data_3
+.jxbrowser-data/Cache/f_000005
+.jxbrowser-data/Cache/f_000006
+.jxbrowser-data/Cache/f_000007
+.jxbrowser-data/Cache/f_000008
+.jxbrowser-data/Cache/f_000009
+.jxbrowser-data/Cache/f_00000a
+.jxbrowser-data/Cache/f_00000b
+.jxbrowser-data/Cache/f_00000c
+.jxbrowser-data/Cache/f_00000d
+.jxbrowser-data/Cache/f_00000e
+.jxbrowser-data/Cache/f_00000f
+.jxbrowser-data/Cache/f_000010
+.jxbrowser-data/Cache/f_000011
+.jxbrowser-data/Cache/f_000012
+.jxbrowser-data/Cache/f_000013
+.jxbrowser-data/Cache/f_000014
+.jxbrowser-data/Cache/f_000015
+.jxbrowser-data/Cache/f_000016
+.jxbrowser-data/Cache/f_000017
+.jxbrowser-data/Cache/f_000018
+.jxbrowser-data/Cache/f_000019
+.jxbrowser-data/Cache/f_00001a
+.jxbrowser-data/Cache/f_00001b
+.jxbrowser-data/Cache/f_00001c
+.jxbrowser-data/Cache/f_00001d
+.jxbrowser-data/Cache/f_00001e
+.jxbrowser-data/Cache/f_00001f
+.jxbrowser-data/Cache/f_000020
+.jxbrowser-data/Cache/f_000021
+.jxbrowser-data/Cache/f_000022
+.jxbrowser-data/Cache/f_000023
+.jxbrowser-data/Cache/f_000024
+.jxbrowser-data/Cache/f_000025
+.jxbrowser-data/Cache/f_00002c
+.jxbrowser-data/Cache/f_00004f
+.jxbrowser-data/Cache/f_000050
+.jxbrowser-data/Cache/f_000051
+.jxbrowser-data/Cache/f_000052
+.jxbrowser-data/Cache/f_000053
+.jxbrowser-data/Cache/f_000054
+.jxbrowser-data/Cache/f_000055
+.jxbrowser-data/Cache/f_000056
+.jxbrowser-data/Cache/f_000057
+.jxbrowser-data/Cache/f_000058
+.jxbrowser-data/Cache/f_000059
+.jxbrowser-data/Cache/f_00005a
+.jxbrowser-data/Cache/f_00005b
+.jxbrowser-data/Cache/f_00005c
+.jxbrowser-data/Cache/f_00005d
+.jxbrowser-data/Cache/f_00005e
+.jxbrowser-data/Cache/f_00005f
+.jxbrowser-data/Cache/f_000060
+.jxbrowser-data/Cache/f_000061
+.jxbrowser-data/Cache/f_000062
+.jxbrowser-data/Cache/f_000063
+.jxbrowser-data/Cache/f_000064
+.jxbrowser-data/Cache/f_000065
+.jxbrowser-data/Cache/f_000066
+.jxbrowser-data/Cache/f_000067
+.jxbrowser-data/Cache/f_000068
+.jxbrowser-data/Cache/f_000069
+.jxbrowser-data/Cache/f_00006a
+.jxbrowser-data/Cache/f_00006b
+.jxbrowser-data/Cache/f_00006c
+.jxbrowser-data/Cache/f_00006d
+.jxbrowser-data/Cache/f_00006e
+.jxbrowser-data/Cache/f_00006f
+.jxbrowser-data/Cache/f_000070
+.jxbrowser-data/Cache/f_000071
+.jxbrowser-data/Cache/f_000072
+.jxbrowser-data/Cache/f_000073
+.jxbrowser-data/Cache/f_000074
+.jxbrowser-data/Cache/f_000075
+.jxbrowser-data/Cache/f_000076
+.jxbrowser-data/Cache/f_000077
+.jxbrowser-data/Cache/f_000078
+.jxbrowser-data/Cache/f_000079
+.jxbrowser-data/Cache/f_00007a
+.jxbrowser-data/Cache/f_00007b
+.jxbrowser-data/Cache/f_00007c
+.jxbrowser-data/Cookies
+.jxbrowser-data/GPUCache/data_0
+.jxbrowser-data/GPUCache/data_1
+.jxbrowser-data/GPUCache/data_3
+.jxbrowser-data/GPUCache/f_000001
+.jxbrowser-data/GPUCache/f_000002
+.jxbrowser-data/GPUCache/f_000003
+.jxbrowser-data/GPUCache/f_000004
+.jxbrowser-data/History
+.jxbrowser-data/History-journal
+.jxbrowser-data/Local Storage - EXT/file_null.localstorage
+.jxbrowser-data/Local Storage - EXT/http_localhost.localstorage
+.jxbrowser-data/Local Storage/http_localhost_55432.localstorage
+.jxbrowser-data/Local Storage/http_localhost_55432.localstorage-journal
+.jxbrowser-data/Local Storage/https_www.youtube-nocookie.com_0.localstorage
+.jxbrowser-data/Login Data
+.jxbrowser-data/user_prefs.json
+.jxbrowser-data/Web Data
+.jxbrowser-data/24301_0.lock
+.jxbrowser-data/Cache/data_0
+.jxbrowser-data/Cache/data_1
+.jxbrowser-data/Cache/data_2
+.jxbrowser-data/Cache/data_3
+.jxbrowser-data/Cookies
+.jxbrowser-data/GPUCache/data_0
+.jxbrowser-data/GPUCache/data_1
+.jxbrowser-data/GPUCache/data_3
+.jxbrowser-data/History
+.jxbrowser-data/History-journal
+.jxbrowser-data/Local Storage - EXT/file_null.localstorage
+.jxbrowser-data/Local Storage/https_www.youtube-nocookie.com_0.localstorage
+.jxbrowser-data/Login Data
+.jxbrowser-data/user_prefs.json
+.jxbrowser-data/Web Data
+.jxbrowser-data/24301_0.lock
+.jxbrowser-data/Cache/data_0
+.jxbrowser-data/Cache/data_1
+.jxbrowser-data/Cache/data_2
+.jxbrowser-data/Cache/data_3
+.jxbrowser-data/Cookies
+.jxbrowser-data/GPUCache/data_0
+.jxbrowser-data/GPUCache/data_1
+.jxbrowser-data/GPUCache/data_3
+.jxbrowser-data/History
+.jxbrowser-data/History-journal
+.jxbrowser-data/Local Storage - EXT/file_null.localstorage
+.jxbrowser-data/Local Storage/https_www.youtube-nocookie.com_0.localstorage
+.jxbrowser-data/Login Data
+.jxbrowser-data/user_prefs.json
+.jxbrowser-data/Web Data
+*.json
+.jxbrowser-data/Web Data
+.jxbrowser-data/user_prefs.json
+.jxbrowser-data/Login Data
+.jxbrowser-data/Local Storage/https_www.youtube-nocookie.com_0.localstorage
+.jxbrowser-data/Local Storage - EXT/file_null.localstorage
+.jxbrowser-data/History-journal
+.jxbrowser-data/History
+.jxbrowser-data/GPUCache/data_3
+.jxbrowser-data/GPUCache/data_1
+.jxbrowser-data/GPUCache/data_0
+.jxbrowser-data/Cookies
+.jxbrowser-data/Cache/data_3
+.jxbrowser-data/Cache/data_2
+.jxbrowser-data/Cache/data_1
+.jxbrowser-data/Cache/data_0
+.jxbrowser-data/24301_0.lock
