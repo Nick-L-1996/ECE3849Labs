@@ -29,7 +29,7 @@ volatile uint32_t gADCErrors; // number of missed ADC deadlines
 uint16_t prevVoltage = 0;
 int loopCount = 0;
 extern uint16_t ADCPrintBuffer[128];
-int32_t ADCLocalBufferIndex;
+volatile int32_t ADCLocalBufferIndex;
 int32_t LastIndex=0;
 
 
@@ -54,30 +54,30 @@ void initADC(void){
 
 }
 void GetWaveform(int Direction, uint16_t Voltage){
-    ADCLocalBufferIndex =  ADC_BUFFER_WRAP(gADCBufferIndex-64); //index begins at half a screen behind the most recent sample
+    ADCLocalBufferIndex =  ADC_BUFFER_WRAP(gADCBufferIndex -64); //index begins at half a screen behind the most recent sample
     prevVoltage = gADCBuffer[ADCLocalBufferIndex];
     int searching = 1;
-    loopCount = 0;
-    ADCLocalBufferIndex = ADC_BUFFER_WRAP(ADCLocalBufferIndex-1);
+    loopCount = 0;//used to count loops
+    ADCLocalBufferIndex = ADC_BUFFER_WRAP(ADCLocalBufferIndex -1);
     while(searching){
         loopCount = loopCount +1;
         if(loopCount>=(ADC_BUFFER_SIZE/2)){
-            ADCLocalBufferIndex = ADC_BUFFER_WRAP(ADCLocalBufferIndex+ADC_BUFFER_SIZE/2-1);
+            ADCLocalBufferIndex = incrementLocalBuff(ADCLocalBufferIndex+(int32_t) (ADC_BUFFER_SIZE/2-1));
             break;
         }
         if(Direction == 0){ // 0 is falling
-            if(prevVoltage>Voltage && gADCBuffer[ADCLocalBufferIndex]<=Voltage){
+            if(prevVoltage<Voltage && gADCBuffer[ADCLocalBufferIndex]>=Voltage){
                 searching = 0;
             }
             else{
                 prevVoltage = gADCBuffer[ADCLocalBufferIndex];
                 LastIndex = ADCLocalBufferIndex;
-                ADCLocalBufferIndex = ADC_BUFFER_WRAP(ADCLocalBufferIndex-1)-63; //for some reason the adc buffer wrap increments the count by 64 instead of 1
+               ADCLocalBufferIndex = ADC_BUFFER_WRAP(ADCLocalBufferIndex - 1); //for some reason the adc buffer wrap increments the count by 64 instead of 1
 
             }
         }
         else{
-            if(prevVoltage<Voltage && gADCBuffer[ADCLocalBufferIndex]>=Voltage){
+            if(prevVoltage>Voltage && gADCBuffer[ADCLocalBufferIndex]<=Voltage){
                           searching = 0;
                       }
                       else{
@@ -87,16 +87,27 @@ void GetWaveform(int Direction, uint16_t Voltage){
 
                       }
         }
-        int copyCount = 0;
-        ADCLocalBufferIndex = ADC_BUFFER_WRAP(ADCLocalBufferIndex-63);
-        while(copyCount<128){
-            ADCPrintBuffer[copyCount] = gADCBuffer[ADCLocalBufferIndex];
-            copyCount = copyCount + 1;
-            ADCLocalBufferIndex = ADC_BUFFER_WRAP(ADCLocalBufferIndex + 1);
+
         }
+    int copyCount = 0;
+         ADCLocalBufferIndex = ADC_BUFFER_WRAP(ADCLocalBufferIndex-63);
+         while(copyCount<128){
+             ADCPrintBuffer[copyCount] = gADCBuffer[ADCLocalBufferIndex];
+             copyCount = copyCount + 1;
+             ADCLocalBufferIndex = ADC_BUFFER_WRAP(ADCLocalBufferIndex + 1);
     }
+}
+int32_t incrementLocalBuff(int32_t Num){
+    if(Num >= (int32_t)ADC_BUFFER_SIZE){
+      return Num - (int32_t)ADC_BUFFER_SIZE;
 
-
+    }
+    else if(Num < 0){
+       return  Num + (int32_t)ADC_BUFFER_SIZE;
+     }
+    else{
+        return  Num;
+    }
 }
 
 void ADC_ISR(void){
@@ -107,5 +118,5 @@ void ADC_ISR(void){
     }
     gADCBuffer[
                gADCBufferIndex = ADC_BUFFER_WRAP(gADCBufferIndex + 1)
-               ] = ADC1_SSFIFO0_R & 0x00000FFF; // read sample from the ADC1 sequence 0 FIFO
+               ] = (ADC1_SSFIFO0_R & 0x00000FFF); // read sample from the ADC1 sequence 0 FIFO
 }

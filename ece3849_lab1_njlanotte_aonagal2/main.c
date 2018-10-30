@@ -58,11 +58,11 @@ int main(void)
 
 
 int VIN_RANGE = 3.3;
-int PIXELS_PER_DIV = 20;
+int PIXELS_PER_DIV = 16;
 int ADC_BITS = 12;
-int ADC_OFFSET = 0;
+int ADC_OFFSET = 2200;
 float fVoltsPerDiv = 0.5;
-    uint16_t Voltage = 500;
+    uint16_t Voltage = 1000;
     float fScale = (VIN_RANGE * PIXELS_PER_DIV)/((1 << ADC_BITS) * fVoltsPerDiv);
     // full-screen rectangle
     tRectangle rectFullScreen = {0, 0, GrContextDpyWidthGet(&sContext)-1, GrContextDpyHeightGet(&sContext)-1};
@@ -71,7 +71,24 @@ float fVoltsPerDiv = 0.5;
         GrContextForegroundSet(&sContext, ClrBlack);
         GrRectFill(&sContext, &rectFullScreen); // fill screen with black
         GrContextForegroundSet(&sContext, ClrBlue);
+        GrLineDrawV(&sContext, 15, 0, 127);
+        GrLineDrawV(&sContext, 31, 0, 127);
+        GrLineDrawV(&sContext, 47, 0, 127);
         GrLineDrawV(&sContext, 63, 0, 127);
+        GrLineDrawV(&sContext, 79, 0, 127);
+        GrLineDrawV(&sContext, 95, 0, 127);
+        GrLineDrawV(&sContext, 111, 0, 127);
+
+
+        GrLineDrawH(&sContext, 0, 127, 15);
+        GrLineDrawH(&sContext, 0, 127, 31);
+        GrLineDrawH(&sContext, 0, 127, 47);
+        GrLineDrawH(&sContext, 0, 127, 63);
+        GrLineDrawH(&sContext, 0, 127, 79);
+        GrLineDrawH(&sContext, 0, 127, 95);
+        GrLineDrawH(&sContext, 0, 127, 111);
+
+
         GrContextForegroundSet(&sContext, ClrYellow); // yellow text
         GetWaveform(0, Voltage);
 
