@@ -127,34 +127,34 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXE_OUTPUTS += \
-ece3849_lab0_starter.out \
+ece3849_lab0_njlanotte_aonagal.out \
 
 EXE_OUTPUTS__QUOTED += \
-"ece3849_lab0_starter.out" \
+"ece3849_lab0_njlanotte_aonagal.out" \
 
 BIN_OUTPUTS += \
-ece3849_lab0_starter.hex \
+ece3849_lab0_njlanotte_aonagal.hex \
 
 BIN_OUTPUTS__QUOTED += \
-"ece3849_lab0_starter.hex" \
+"ece3849_lab0_njlanotte_aonagal.hex" \
 
 
 # All Target
 all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
-	@$(MAKE) --no-print-directory -Onone "ece3849_lab0_starter.out"
+	@$(MAKE) --no-print-directory -Onone "ece3849_lab0_njlanotte_aonagal.out"
 
 # Tool invocations
-ece3849_lab0_starter.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
+ece3849_lab0_njlanotte_aonagal.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: ARM Linker'
-	"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.2.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --opt_for_speed=3 --define=ccs="ccs" --define=PART_TM4C1294NCPDT -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"ece3849_lab0_starter.map" --heap_size=0 --stack_size=2048 -i"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.2.LTS/lib" -i"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.2.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="ece3849_lab0_starter_linkInfo.xml" --rom_model -o "ece3849_lab0_starter.out" $(ORDERED_OBJS)
+	"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.2.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --opt_for_speed=3 --define=ccs="ccs" --define=PART_TM4C1294NCPDT -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"ece3849_lab0_njlanotte_aonagal.map" --heap_size=0 --stack_size=2048 -i"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.2.LTS/lib" -i"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.2.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="ece3849_lab0_njlanotte_aonagal_linkInfo.xml" --rom_model -o "ece3849_lab0_njlanotte_aonagal.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
-ece3849_lab0_starter.hex: $(EXE_OUTPUTS)
+ece3849_lab0_njlanotte_aonagal.hex: $(EXE_OUTPUTS)
 	@echo 'Building files: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo 'Invoking: ARM Hex Utility'
-	"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.2.LTS/bin/armhex"  -o "ece3849_lab0_starter.hex" $(EXE_OUTPUTS__QUOTED)
+	"C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.2.LTS/bin/armhex"  -o "ece3849_lab0_njlanotte_aonagal.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo ' '
 

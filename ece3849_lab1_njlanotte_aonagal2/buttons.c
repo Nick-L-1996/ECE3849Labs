@@ -27,6 +27,9 @@ uint32_t gADCSamplingRate;      // [Hz] actual ADC sampling rate
 // imported globals
 extern uint32_t gSystemClock;   // [Hz] system clock frequency
 extern volatile uint32_t gTime; // time in hundredths of a second
+extern volatile uint32_t VoltageScale;
+extern volatile uint16_t tDirection;
+extern volatile uint16_t tVoltage;
 
 // initialize all button and joystick handling hardware
 void ButtonInit(void)
@@ -174,15 +177,32 @@ void ButtonISR(void) {
     static bool tic = false;
     static bool running = true;
 
-    if (presses & 1) { // EK-TM4C1294XL button 1 pressed
-        running = !running;
+    if (presses & 128) { // EK-TM4C1294XL button 1 pressed
+        if(VoltageScale <3){
+            VoltageScale++;
+        }
     }
 
+    if (presses & 256){
+        if(VoltageScale>0){
+                  VoltageScale--;
+              }
+       }
+    if (presses & 4){
+           tDirection = !tDirection;
+          }
+
+    if(presses & 8){
+        if(tVoltage>=3968){
+            tVoltage = 0;
+        }
+        else{
+            tVoltage = tVoltage +128;
+        }
+    }
     if (running) {
         if (tic) gTime++; // increment time every other ISR call
         tic = !tic;
     }
-    if (presses & 2){
-        gTime = 0;
-    }
+
 }

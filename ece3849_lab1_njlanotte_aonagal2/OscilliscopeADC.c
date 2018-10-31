@@ -19,6 +19,7 @@
 #include "OscilloscopeADC.h"
 #include "inc/tm4c1294ncpdt.h"
 
+
 extern uint32_t gSystemClock;   // [Hz] system clock frequency
 extern volatile uint32_t gTime; // time in hundredths of a second
 #define ADC_BUFFER_SIZE 2048 // size must be a power of 2
@@ -62,7 +63,7 @@ void GetWaveform(int Direction, uint16_t Voltage){
     while(searching){
         loopCount = loopCount +1;
         if(loopCount>=(ADC_BUFFER_SIZE/2)){
-            ADCLocalBufferIndex = incrementLocalBuff(ADCLocalBufferIndex+(int32_t) (ADC_BUFFER_SIZE/2-1));
+            ADCLocalBufferIndex = ADC_BUFFER_WRAP(ADCLocalBufferIndex+(int32_t) (ADC_BUFFER_SIZE/2-1));
             break;
         }
         if(Direction == 0){ // 0 is falling
@@ -97,18 +98,7 @@ void GetWaveform(int Direction, uint16_t Voltage){
              ADCLocalBufferIndex = ADC_BUFFER_WRAP(ADCLocalBufferIndex + 1);
     }
 }
-int32_t incrementLocalBuff(int32_t Num){
-    if(Num >= (int32_t)ADC_BUFFER_SIZE){
-      return Num - (int32_t)ADC_BUFFER_SIZE;
 
-    }
-    else if(Num < 0){
-       return  Num + (int32_t)ADC_BUFFER_SIZE;
-     }
-    else{
-        return  Num;
-    }
-}
 
 void ADC_ISR(void){
     ADC1_ISC_R = ADC1_ISC_R & (0xFFFEFFF); // clear ADC1 sequence0 interrupt flag in the ADCISC register

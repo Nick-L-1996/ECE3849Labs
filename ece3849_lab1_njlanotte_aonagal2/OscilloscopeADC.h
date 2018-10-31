@@ -19,6 +19,5 @@ void initADC(void);
 
 void GetWaveform(int Direction, uint16_t Voltage);
 
-int32_t incrementLocalBuff(int32_t Num);
 
 #endif /* OSCILLOSCOPEADC_H_ */

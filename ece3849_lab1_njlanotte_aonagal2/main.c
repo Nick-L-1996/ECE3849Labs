@@ -19,6 +19,8 @@
 #include "buttons.h"
 #include "OscilloscopeADC.h"
 #include <math.h>
+#include "driverlib/timer.h"
+#include "inc/hw_memmap.h"
 
 
 
@@ -26,6 +28,11 @@ uint32_t gSystemClock; // [Hz] system clock frequency
 volatile uint32_t gTime = 8345; // time in hundredths of a second
 uint16_t ADCPrintBuffer[128];
 extern volatile uint32_t gButtons;
+volatile uint32_t VoltageScale = 2;
+int gVoltageScaleStr[] = {
+  100, 200, 500, 1
+};
+char str[50];   // string buffer
 
 int binary_conversion(int num){
     if(num==0){
@@ -34,9 +41,18 @@ int binary_conversion(int num){
     else
         return(num%2+10*binary_conversion(num/2));
 }
+#pragma FUNC_CANNOT_INLINE(cpu_load_count)
+uint32_t cpu_load_count(void);
+uint32_t count_unloaded = 0;
+uint32_t count_loaded = 0;
+float cpu_load = 0.0;
+
+volatile uint16_t tDirection = 0;
+volatile uint16_t tVoltage = 2048;
 
 int main(void)
 {
+    FPUEnable();
     IntMasterDisable();
 
     // Enable the Floating Point Unit, and permit ISRs to use it
@@ -50,7 +66,16 @@ int main(void)
     Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_UP); // set screen orientation
 
     ButtonInit();
-    initADC();
+
+
+    // initialize timer 3 in one-shot mode for polled timing
+       SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER3);
+       TimerDisable(TIMER3_BASE, TIMER_BOTH);
+       TimerConfigure(TIMER3_BASE, TIMER_CFG_A_PERIODIC);
+       TimerLoadSet(TIMER3_BASE, TIMER_A, gSystemClock/100-1); // .01 sec interval
+
+       count_unloaded = cpu_load_count();
+       initADC();
     IntMasterEnable();
 
     tContext sContext;
@@ -60,14 +85,15 @@ int main(void)
 int VIN_RANGE = 3.3;
 int PIXELS_PER_DIV = 16;
 int ADC_BITS = 12;
-int ADC_OFFSET = 2200;
+int ADC_OFFSET = 2048;
 float fVoltsPerDiv = 0.5;
-    uint16_t Voltage = 1000;
+
     float fScale = (VIN_RANGE * PIXELS_PER_DIV)/((1 << ADC_BITS) * fVoltsPerDiv);
     // full-screen rectangle
     tRectangle rectFullScreen = {0, 0, GrContextDpyWidthGet(&sContext)-1, GrContextDpyHeightGet(&sContext)-1};
 
     while (true) {
+
         GrContextForegroundSet(&sContext, ClrBlack);
         GrRectFill(&sContext, &rectFullScreen); // fill screen with black
         GrContextForegroundSet(&sContext, ClrBlue);
@@ -88,9 +114,59 @@ float fVoltsPerDiv = 0.5;
         GrLineDrawH(&sContext, 0, 127, 95);
         GrLineDrawH(&sContext, 0, 127, 111);
 
+        GrContextForegroundSet(&sContext, ClrWhite); // yellow text
+        GrContextFontSet(&sContext, &g_sFontFixed6x8); // select font
+        uint32_t localV = VoltageScale;
+
+
+        if(localV == 0){
+            fVoltsPerDiv = .1;
+              GrStringDraw(&sContext, "100mV", /*length*/ -1, /*x*/ 40, /*y*/ 1, /*opaque*/ false);
+        }
+        else if(localV == 1){
+            fVoltsPerDiv = .2;
+            GrStringDraw(&sContext, "200mV", /*length*/ -1, /*x*/ 40, /*y*/ 1, /*opaque*/ false);
+        }
+        else if(localV == 2){
+            fVoltsPerDiv = .5;
+            GrStringDraw(&sContext, "500mV", /*length*/ -1, /*x*/ 40, /*y*/ 1, /*opaque*/ false);
+                }
+        else{
+            fVoltsPerDiv = 1;
+            GrStringDraw(&sContext, " 1V", /*length*/ -1, /*x*/ 40, /*y*/ 1, /*opaque*/ false);
+        }
+        fScale = (VIN_RANGE * PIXELS_PER_DIV)/((1 << ADC_BITS) * fVoltsPerDiv);
+        GrStringDraw(&sContext, "16us", /*length*/ -1, /*x*/ 5, /*y*/ 1, /*opaque*/ false);
+        count_loaded = cpu_load_count();
+              cpu_load = 1.0f - (float)count_loaded/count_unloaded; // compute CPU load
+              char str[50];   // string buffer
+              snprintf(str, sizeof(str), "CPU load = %.1f %%", cpu_load*100); // convert time to string
+              GrStringDraw(&sContext, str, /*length*/ -1, /*x*/ 5, /*y*/ 120, /*opaque*/ false);
+
+       GrLineDrawV(&sContext, 80, 11, 1);
+       GrLineDrawH(&sContext, 75, 80, 11);
+       GrLineDrawH(&sContext, 80, 85, 1);
+
+       if(tDirection == 0){
+           GrLineDraw(&sContext, 78, 5, 79, 6);
+           GrLineDraw(&sContext, 82, 5, 81,  6);
+       }
+       else{
+           GrLineDraw(&sContext, 78, 6, 79, 5);
+           GrLineDraw(&sContext, 82, 6, 81,  5);
+       }
+       uint16_t tVoltageL = tVoltage;
+       float tVLevel = ((float)tVoltageL - ADC_OFFSET)/4096*3.3;
+       snprintf(str, sizeof(str), "%.2f V", tVLevel); // convert time to string
+       GrStringDraw(&sContext, str, /*length*/ -1, /*x*/ 90, /*y*/ 1, /*opaque*/ false);
+       GrContextForegroundSet(&sContext, ClrPurple); // yellow text
+       GrLineDrawH(&sContext, 0, 127, LCD_VERTICAL_MAX/2 - (int)roundf(fScale * (tVoltageL - ADC_OFFSET)));
+
+
+
 
         GrContextForegroundSet(&sContext, ClrYellow); // yellow text
-        GetWaveform(0, Voltage);
+        GetWaveform(tDirection, tVoltageL);
 
         int i;
        for(i = 0; i<127; i++){
@@ -103,6 +179,18 @@ float fVoltsPerDiv = 0.5;
 
         }
 
+
         GrFlush(&sContext); // flush the frame buffer to the LCD
     }
 }
+
+uint32_t cpu_load_count(void)
+{
+    uint32_t i = 0;
+    TimerIntClear(TIMER3_BASE, TIMER_TIMA_TIMEOUT);
+    TimerEnable(TIMER3_BASE, TIMER_A); // start one-shot timer
+    while (!(TimerIntStatus(TIMER3_BASE, false) & TIMER_TIMA_TIMEOUT))
+        i++;
+    return i;
+}
+
