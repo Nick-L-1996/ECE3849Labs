@@ -39,6 +39,14 @@ void initADC(void){
     GPIOPinTypeADC(GPIO_PORTE_BASE, GPIO_PIN_0 ); // GPIO setup for analog input AIN3
     SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC1);
 
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER2);
+    TimerDisable(TIMER2_BASE, TIMER_BOTH);
+    TimerConfigure(TIMER2_BASE, TIMER_CFG_PERIODIC);
+    TimerLoadSet(TIMER2_BASE, TIMER_A, (float)gSystemClock/480 );
+    TimerEnable(TIMER2_BASE, TIMER_BOTH);
+    TimerControlTrigger(TIMER2_BASE, TIMER_A, 0);
+
+
     // ADC clock
     uint32_t pll_frequency = SysCtlFrequencyGet(CRYSTAL_FREQUENCY);
     uint32_t pll_divisor = (pll_frequency - 1) / (16 * ADC_SAMPLING_RATE) + 1; //round up
@@ -48,12 +56,16 @@ void initADC(void){
     ADCSequenceStepConfigure(ADC1_BASE, 0, 0, ADC_CTL_CH3| ADC_CTL_IE | ADC_CTL_END);// in the 0th step, sample channel 3 (AIN3) **Might need changing
 
     // enable interrupt, and make it the end of sequence
+
+
     ADCSequenceEnable(ADC1_BASE, 0); // enable the sequence. it is now sampling
     ADCIntEnable(ADC1_BASE, 0); // enable sequence 0 interrupt in the ADC1 peripheral
     IntPrioritySet(INT_ADC1SS0, 0); // set ADC1 sequence 0 interrupt priority
     IntEnable(INT_ADC1SS0); // enable ADC1 sequence 0 interrupt in int. controller
 
 }
+
+
 void GetWaveform(int Direction, uint16_t Voltage){
     ADCLocalBufferIndex =  ADC_BUFFER_WRAP(gADCBufferIndex -64); //index begins at half a screen behind the most recent sample
     prevVoltage = gADCBuffer[ADCLocalBufferIndex];
@@ -109,4 +121,72 @@ void ADC_ISR(void){
     gADCBuffer[
                gADCBufferIndex = ADC_BUFFER_WRAP(gADCBufferIndex + 1)
                ] = (ADC1_SSFIFO0_R & 0x00000FFF); // read sample from the ADC1 sequence 0 FIFO
+}
+
+void changeADCSampleRate(int state){
+        ADCSequenceDisable(ADC1_BASE, 0); // choose ADC1 sequence 0; disable before configuring
+        TimerDisable(TIMER2_BASE, TIMER_BOTH);
+        switch(state){
+        case 0:
+            ADCSequenceConfigure(ADC1_BASE, 0, ADC_TRIGGER_TIMER, 1); // specify the "Always" trigger
+            TimerLoadSet(TIMER2_BASE, TIMER_A, 600000 );
+            TimerControlTrigger(TIMER2_BASE, TIMER_A, 1);
+            break;
+
+        case 1:
+           ADCSequenceConfigure(ADC1_BASE, 0, ADC_TRIGGER_TIMER, 1); // specify the "Always" trigger
+           TimerLoadSet(TIMER2_BASE, TIMER_A, 300000 );
+           TimerControlTrigger(TIMER2_BASE, TIMER_A, 1);
+           break;
+
+        case 2:
+           ADCSequenceConfigure(ADC1_BASE, 0, ADC_TRIGGER_TIMER, 1); // specify the "Always" trigger
+           TimerLoadSet(TIMER2_BASE, TIMER_A, 120000 );
+           TimerControlTrigger(TIMER2_BASE, TIMER_A, 1);
+           break;
+
+        case 3:
+            ADCSequenceConfigure(ADC1_BASE, 0, ADC_TRIGGER_TIMER, 1); // specify the "Always" trigger
+            TimerLoadSet(TIMER2_BASE, TIMER_A, 60000 );
+            TimerControlTrigger(TIMER2_BASE, TIMER_A, 1);
+            break;
+
+        case 4:
+            ADCSequenceConfigure(ADC1_BASE, 0, ADC_TRIGGER_TIMER, 1); // specify the "Always" trigger
+            TimerLoadSet(TIMER2_BASE, TIMER_A, 12000 );
+            TimerControlTrigger(TIMER2_BASE, TIMER_A, 1);
+            break;
+
+        case 5:
+            ADCSequenceConfigure(ADC1_BASE, 0, ADC_TRIGGER_TIMER, 1); // specify the "Always" trigger
+            TimerLoadSet(TIMER2_BASE, TIMER_A, 4800 );
+            TimerControlTrigger(TIMER2_BASE, TIMER_A, 1);
+            break;
+
+        case 6:
+            ADCSequenceConfigure(ADC1_BASE, 0, ADC_TRIGGER_TIMER, 1); // specify the "Always" trigger
+            TimerLoadSet(TIMER2_BASE, TIMER_A, 2400 );
+            TimerControlTrigger(TIMER2_BASE, TIMER_A, 1);
+            break;
+
+        case 7:
+            ADCSequenceConfigure(ADC1_BASE, 0, ADC_TRIGGER_TIMER, 1); // specify the "Always" trigger
+            TimerLoadSet(TIMER2_BASE, TIMER_A, 1200 );
+            TimerControlTrigger(TIMER2_BASE, TIMER_A, 1);
+            break;
+
+        case 8:
+            ADCSequenceConfigure(ADC1_BASE, 0, ADC_TRIGGER_TIMER, 1); // specify the "Always" trigger
+            TimerLoadSet(TIMER2_BASE, TIMER_A, 300 );
+            TimerControlTrigger(TIMER2_BASE, TIMER_A, 1);
+            break;
+
+        case 9:
+            ADCSequenceConfigure(ADC1_BASE, 0, ADC_TRIGGER_ALWAYS, 0); // specify the "Always" trigger
+            TimerControlTrigger(TIMER2_BASE, TIMER_A, 0);
+            break;
+
+        }
+        ADCSequenceEnable(ADC1_BASE, 0); // enable the sequence. it is now sampling
+        TimerEnable(TIMER2_BASE, TIMER_BOTH);
 }

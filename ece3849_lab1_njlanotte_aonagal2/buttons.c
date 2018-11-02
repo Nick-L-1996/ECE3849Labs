@@ -30,6 +30,7 @@ extern volatile uint32_t gTime; // time in hundredths of a second
 extern volatile uint32_t VoltageScale;
 extern volatile uint16_t tDirection;
 extern volatile uint16_t tVoltage;
+extern volatile uint16_t ADCSampleState;
 
 // initialize all button and joystick handling hardware
 void ButtonInit(void)
@@ -200,6 +201,18 @@ void ButtonISR(void) {
             tVoltage = tVoltage +128;
         }
     }
+    if(presses & 32){
+        if(ADCSampleState!=9){
+            ADCSampleState++;
+        }
+
+    }
+    if(presses & 64){
+         if(ADCSampleState!=0){
+             ADCSampleState--;
+         }
+
+     }
     if (running) {
         if (tic) gTime++; // increment time every other ISR call
         tic = !tic;

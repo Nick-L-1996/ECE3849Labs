@@ -18,6 +18,6 @@
 void initADC(void);
 
 void GetWaveform(int Direction, uint16_t Voltage);
-
+void changeADCSampleRate(int state);
 
 #endif /* OSCILLOSCOPEADC_H_ */
