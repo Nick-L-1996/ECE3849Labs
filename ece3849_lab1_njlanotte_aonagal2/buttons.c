@@ -66,8 +66,6 @@ void ButtonInit(void)
     GPIOPinTypeGPIOInput(GPIO_PORTD_BASE, GPIO_PIN_4 );
     GPIOPadConfigSet(GPIO_PORTD_BASE,  GPIO_PIN_4  , GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
 
-
-
     // analog input AIN13, at GPIO PD2 = BoosterPack Joystick HOR(X)
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
     GPIOPinTypeADC(GPIO_PORTD_BASE, GPIO_PIN_2);
@@ -178,22 +176,21 @@ void ButtonISR(void) {
     static bool tic = false;
     static bool running = true;
 
-    if (presses & 128) { // EK-TM4C1294XL button 1 pressed
+    if (presses & 128) { //up on the analog stick, increment voltage scale up one state
         if(VoltageScale <3){
             VoltageScale++;
         }
     }
-
-    if (presses & 256){
+    if (presses & 256){//down on the analog stick, decrement voltage one state
         if(VoltageScale>0){
-                  VoltageScale--;
-              }
-       }
-    if (presses & 4){
+            VoltageScale--;
+        }
+    }
+    if (presses & 4){//SW1 toggle trigger mode
            tDirection = !tDirection;
           }
 
-    if(presses & 8){
+    if(presses & 8){//SW2 iterate through 32 trigger levels
         if(tVoltage>=3968){
             tVoltage = 0;
         }
@@ -201,17 +198,15 @@ void ButtonISR(void) {
             tVoltage = tVoltage +128;
         }
     }
-    if(presses & 32){
+    if(presses & 32){//Right analog stick, increment state variable
         if(ADCSampleState!=9){
             ADCSampleState++;
         }
-
     }
-    if(presses & 64){
+    if(presses & 64){//Left analog stick, decrement state variable
          if(ADCSampleState!=0){
              ADCSampleState--;
          }
-
      }
     if (running) {
         if (tic) gTime++; // increment time every other ISR call
