@@ -176,12 +176,12 @@ void ButtonISR(void) {
     static bool tic = false;
     static bool running = true;
 
-    if (presses & 128) { //up on the analog stick, increment voltage scale up one state
+    if (presses & 128) { //up on the analog stick, increment voltage state
         if(VoltageScale <3){
             VoltageScale++;
         }
     }
-    if (presses & 256){//down on the analog stick, decrement voltage one state
+    if (presses & 256){//down on the analog stick, decrement voltage state
         if(VoltageScale>0){
             VoltageScale--;
         }

@@ -70,6 +70,7 @@ int main(void)
     count_unloaded = cpu_load_count();
     ButtonInit();
     initADC();//enable last so that the ADC doesnt have an error
+    count_loaded = cpu_load_count();
     IntMasterEnable();//enable interrupts
 
     tContext sContext;//Context for Display
@@ -113,7 +114,7 @@ int main(void)
         GrLineDrawH(&sContext, 0, 127, 103);
         GrLineDrawH(&sContext, 0, 127, 123);
 
-        //////////////////////////////////////Set text color to white and write text//////////////////
+        //////////////////////////////////////Set text color to white and write time/voltage scales and trigger icon //////////////////
         GrContextForegroundSet(&sContext, ClrWhite); // white text
         uint32_t localV = VoltageScale;//atomic read in to prevent shared data issues
         //Sets voltage scale text depending on the current setting
