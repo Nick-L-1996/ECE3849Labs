@@ -32,6 +32,12 @@ volatile uint32_t VoltageScale = 2;
 volatile int ADCSampleState = 9;
 int prevADCSampleState = 9;
 char str[50];   // string buffer
+const char * const TimeScaleStr[]= {
+   "100ms", "50ms", "20ms", "10ms", "2ms", "800us", "400us", "200us", "50us", "20us"
+};
+const char * const VoltageScaleStr[] = {
+  "100mV", "200mV", "500mV", "1V"
+};
 
 #pragma FUNC_CANNOT_INLINE(cpu_load_count)
 uint32_t cpu_load_count(void);
@@ -107,27 +113,25 @@ int main(void)
         GrLineDrawH(&sContext, 0, 127, 103);
         GrLineDrawH(&sContext, 0, 127, 123);
 
-
-        //////////////////////////////////////Set text color to white//////////////////
+        //////////////////////////////////////Set text color to white and write text//////////////////
         GrContextForegroundSet(&sContext, ClrWhite); // white text
         uint32_t localV = VoltageScale;//atomic read in to prevent shared data issues
         //Sets voltage scale text depending on the current setting
-        if(localV == 0){
-            fVoltsPerDiv = .1;
-              GrStringDraw(&sContext, "100mV", /*length*/ -1, /*x*/ 40, /*y*/ 1, /*opaque*/ false);
+        switch(localV){
+            case 0:
+                fVoltsPerDiv = .1;
+                break;
+            case 1:
+                fVoltsPerDiv = .2;
+                break;
+            case 2:
+                fVoltsPerDiv = .5;
+                break;
+            case 3:
+                fVoltsPerDiv = 1;
         }
-        else if(localV == 1){
-            fVoltsPerDiv = .2;
-            GrStringDraw(&sContext, "200mV", /*length*/ -1, /*x*/ 40, /*y*/ 1, /*opaque*/ false);
-        }
-        else if(localV == 2){
-            fVoltsPerDiv = .5;
-            GrStringDraw(&sContext, "500mV", /*length*/ -1, /*x*/ 40, /*y*/ 1, /*opaque*/ false);
-                }
-        else{
-            fVoltsPerDiv = 1;
-            GrStringDraw(&sContext, " 1V", /*length*/ -1, /*x*/ 40, /*y*/ 1, /*opaque*/ false);
-        }
+        GrStringDraw(&sContext, VoltageScaleStr[localV], /*length*/ -1, /*x*/ 40, /*y*/ 1, /*opaque*/ false);//writes V Scale text
+
         fScale = (VIN_RANGE * PIXELS_PER_DIV)/((1 << ADC_BITS) * fVoltsPerDiv);
         int lADCSampleState = ADCSampleState;//This is state variable for time scale. Atomic read in to prevent shared data issues
         if(lADCSampleState != prevADCSampleState){
@@ -136,38 +140,7 @@ int main(void)
         prevADCSampleState = lADCSampleState;//remembers the last state value for comparison next loop
 
         //prints appropriate time scale value
-        switch(lADCSampleState){
-        case 0:
-            GrStringDraw(&sContext, "100ms", /*length*/ -1, /*x*/ 5, /*y*/ 1, /*opaque*/ false);
-            break;
-        case 1:
-           GrStringDraw(&sContext, "50ms", /*length*/ -1, /*x*/ 5, /*y*/ 1, /*opaque*/ false);
-           break;
-        case 2:
-           GrStringDraw(&sContext, "20ms", /*length*/ -1, /*x*/ 5, /*y*/ 1, /*opaque*/ false);
-           break;
-        case 3:
-            GrStringDraw(&sContext, "10ms", /*length*/ -1, /*x*/ 5, /*y*/ 1, /*opaque*/ false);
-            break;
-        case 4:
-            GrStringDraw(&sContext, "2ms", /*length*/ -1, /*x*/ 5, /*y*/ 1, /*opaque*/ false);
-            break;
-        case 5:
-            GrStringDraw(&sContext, "800us", /*length*/ -1, /*x*/ 5, /*y*/ 1, /*opaque*/ false);
-            break;
-        case 6:
-            GrStringDraw(&sContext, "400us", /*length*/ -1, /*x*/ 5, /*y*/ 1, /*opaque*/ false);
-            break;
-        case 7:
-            GrStringDraw(&sContext, "200us", /*length*/ -1, /*x*/ 5, /*y*/ 1, /*opaque*/ false);
-            break;
-        case 8:
-            GrStringDraw(&sContext, "50us", /*length*/ -1, /*x*/ 5, /*y*/ 1, /*opaque*/ false);
-            break;
-        case 9:
-            GrStringDraw(&sContext, "20us", /*length*/ -1, /*x*/ 5, /*y*/ 1, /*opaque*/ false);
-            break;
-        }
+        GrStringDraw(&sContext, TimeScaleStr[lADCSampleState], /*length*/ -1, /*x*/ 5, /*y*/ 1, /*opaque*/ false);
 
         //Prints CPU load on lower portion of the screen
         count_loaded = cpu_load_count();
@@ -175,7 +148,6 @@ int main(void)
         char str[50];   // string buffer
         snprintf(str, sizeof(str), "CPU load = %.1f %%", cpu_load*100); // convert time to string
         GrStringDraw(&sContext, str, /*length*/ -1, /*x*/ 5, /*y*/ 120, /*opaque*/ false);
-
 
        /////////////////////////Draws trigger icon//////////////////////
        GrLineDrawV(&sContext, 80, 11, 1);
@@ -191,7 +163,6 @@ int main(void)
            GrLineDraw(&sContext, 78, 6, 79, 5);
            GrLineDraw(&sContext, 82, 6, 81,  5);
        }
-       /////////////////////////////////////////////////////////////////
 
        /////////////////////////////////////Draws Trigger Voltage level in purple///////////////////
        uint16_t tVoltageL = tVoltage;//atomic read in to prevent shared data issues
