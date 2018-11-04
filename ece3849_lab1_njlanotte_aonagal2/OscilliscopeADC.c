@@ -115,7 +115,7 @@ void ADC_ISR(void){
     }
     gADCBuffer[
                gADCBufferIndex = ADC_BUFFER_WRAP(gADCBufferIndex + 1)
-               ] = (ADC1_SSFIFO0_R & 0x00000FFF); // read sample from the ADC1 sequence 0 FIFO
+               ] = (ADC1_SSFIFO0_R); // read sample from the ADC1 sequence 0 FIFO
 }
 
 void changeADCSampleRate(int state){

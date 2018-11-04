@@ -67,10 +67,10 @@ int main(void)
 
     Crystalfontz128x128_Init(); // Initialize the LCD display driver
     Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_UP); // set screen orientation
-    count_unloaded = cpu_load_count();
+    count_unloaded = cpu_load_count();//measure cpu load with ints disabled
     ButtonInit();
     initADC();//enable last so that the ADC doesnt have an error
-    count_loaded = cpu_load_count();
+
     IntMasterEnable();//enable interrupts
 
     tContext sContext;//Context for Display
