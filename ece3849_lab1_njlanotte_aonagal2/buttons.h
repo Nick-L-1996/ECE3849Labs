@@ -39,6 +39,7 @@ extern volatile uint32_t gButtons;	// debounced button state, one per bit in the
 extern uint32_t gJoystick[2];       // joystick coordinates
 extern uint32_t gADCSamplingRate;   // [Hz] actual ADC sampling rate
 
+
 // initialize all button and joystick handling hardware
 void ButtonInit(void);
 
@@ -51,5 +52,12 @@ void ButtonReadJoystick(void);
 
 // autorepeat button presses if a button is held long enough
 uint32_t ButtonAutoRepeat(void);
+
+typedef uint32_t DataType;
+
+
+void HandleButtonPress(void); //handles button presses in FIFO
+int fifo_put(DataType data);//put data in fifo
+int fifo_get(DataType *data);
 
 #endif /* BUTTONS_H_ */

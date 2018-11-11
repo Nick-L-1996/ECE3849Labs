@@ -89,6 +89,7 @@ int main(void)
     tRectangle rectFullScreen = {0, 0, GrContextDpyWidthGet(&sContext)-1, GrContextDpyHeightGet(&sContext)-1};
 
     while (true) {
+        HandleButtonPress();//handles button presses stored in FIFO
         /////////////////// fill screen with black///////////////////
         GrContextForegroundSet(&sContext, ClrBlack);
         GrRectFill(&sContext, &rectFullScreen);

@@ -31,6 +31,38 @@ extern volatile uint32_t VoltageScale;
 extern volatile uint16_t tDirection;
 extern volatile uint16_t tVoltage;
 extern volatile uint16_t ADCSampleState;
+volatile DataType buttonfifo[11];
+const int FIFO_SIZE = 11;//for some reason the compiler didn't like this as a #define
+volatile int butfifo_head = 0;
+volatile int butfifo_tail = 0;
+
+
+int fifo_put(DataType data){
+    int new_tail = butfifo_tail +1;
+    if(new_tail >= FIFO_SIZE){
+        new_tail = 0;
+    }
+    if(butfifo_head!= new_tail){
+        buttonfifo[butfifo_tail] = data;
+        butfifo_tail = new_tail;
+        return 1;
+    }
+    return 0;//full
+}
+
+int fifo_get(DataType *data){
+    if(butfifo_head != butfifo_tail){
+        *data = buttonfifo[butfifo_head];
+        if((butfifo_head) >= FIFO_SIZE-1){
+            butfifo_head = 0;
+        }
+        else{
+            butfifo_head++;
+        }
+        return 1;
+    }
+    return 0;
+}
 
 // initialize all button and joystick handling hardware
 void ButtonInit(void)
@@ -175,42 +207,52 @@ void ButtonISR(void) {
 
     static bool tic = false;
     static bool running = true;
+    if(presses!=0){//adds to fifo if button is pressed
+    fifo_put(presses);
+    }
 
-    if (presses & 128) { //up on the analog stick, increment voltage state
-        if(VoltageScale <3){
-            VoltageScale++;
-        }
-    }
-    if (presses & 256){//down on the analog stick, decrement voltage state
-        if(VoltageScale>0){
-            VoltageScale--;
-        }
-    }
-    if (presses & 4){//SW1 toggle trigger mode
-           tDirection = !tDirection;
-          }
-
-    if(presses & 8){//SW2 iterate through 32 trigger levels
-        if(tVoltage>=3968){
-            tVoltage = 0;
-        }
-        else{
-            tVoltage = tVoltage +128;
-        }
-    }
-    if(presses & 32){//Right analog stick, increment state variable
-        if(ADCSampleState!=9){
-            ADCSampleState++;
-        }
-    }
-    if(presses & 64){//Left analog stick, decrement state variable
-         if(ADCSampleState!=0){
-             ADCSampleState--;
-         }
-     }
     if (running) {
         if (tic) gTime++; // increment time every other ISR call
         tic = !tic;
     }
 
+}
+
+void HandleButtonPress(void){
+    DataType presses = 0;
+    if(fifo_get(&presses)){//if FIFO is not empty check the values and apply them as needed
+
+        if (presses & 128) { //up on the analog stick, increment voltage state
+               if(VoltageScale <3){
+                   VoltageScale++;
+               }
+           }
+           if (presses & 256){//down on the analog stick, decrement voltage state
+               if(VoltageScale>0){
+                   VoltageScale--;
+               }
+           }
+           if (presses & 4){//SW1 toggle trigger mode
+                  tDirection = !tDirection;
+                 }
+
+           if(presses & 8){//SW2 iterate through 32 trigger levels
+               if(tVoltage>=3968){
+                   tVoltage = 0;
+               }
+               else{
+                   tVoltage = tVoltage +128;
+               }
+           }
+           if(presses & 32){//Right analog stick, increment state variable
+               if(ADCSampleState!=9){
+                   ADCSampleState++;
+               }
+           }
+           if(presses & 64){//Left analog stick, decrement state variable
+                if(ADCSampleState!=0){
+                    ADCSampleState--;
+                }
+            }
+       }
 }
