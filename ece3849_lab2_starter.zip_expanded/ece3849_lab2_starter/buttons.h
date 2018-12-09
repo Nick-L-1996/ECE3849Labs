@@ -55,10 +55,7 @@ uint32_t ButtonAutoRepeat(void);
 
 typedef uint32_t DataType;
 
-
 void HandleButtonPress(uint32_t presses); //handles button presses in FIFO
-int fifo_put(DataType data);//put data in fifo
-int fifo_get(DataType *data);
 uint32_t getButtonPresses(void);
 
 #endif /* BUTTONS_H_ */

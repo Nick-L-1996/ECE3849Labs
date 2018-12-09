@@ -65,6 +65,7 @@ void initADC(void){
     IntEnable(INT_ADC1SS0); // enable ADC1 sequence 0 interrupt in int. controller
 }
 
+//copies newest 1024 samples from ADC buffer
 void GetSpectrum(){
     ADCLocalBufferIndex =  gADCBufferIndex;
     int i;
@@ -72,9 +73,7 @@ void GetSpectrum(){
         RawSpectrumBuffer[i] = gADCBuffer[ADCLocalBufferIndex];
         ADCLocalBufferIndex = ADC_BUFFER_WRAP(ADCLocalBufferIndex - 1);
     }
-
 }
-
 
 void GetWaveform(int Direction, uint16_t Voltage){//gets 128 samples from the circular buffer to be plotted on the display
     ADCLocalBufferIndex =  ADC_BUFFER_WRAP(gADCBufferIndex -64); //index begins at half a screen behind the most recent sample
@@ -109,7 +108,7 @@ void GetWaveform(int Direction, uint16_t Voltage){//gets 128 samples from the ci
             }
         }
     }
-    timeFindTrigger = (1200000-TIMER3_TAR_R)/120;
+    timeFindTrigger = (1200000-TIMER3_TAR_R)/120;//used to find the time it takes to give up on finding a trigger
     //once trigger is found, pull 128 samples from buffer about that point
     int copyCount = 0;
     ADCLocalBufferIndex = ADC_BUFFER_WRAP(ADCLocalBufferIndex-63);
@@ -118,7 +117,7 @@ void GetWaveform(int Direction, uint16_t Voltage){//gets 128 samples from the ci
         copyCount = copyCount + 1;
         ADCLocalBufferIndex = ADC_BUFFER_WRAP(ADCLocalBufferIndex + 1);
     }
-    timeCopyBuffer = (1200000-TIMER3_TAR_R)/120 - timeFindTrigger;
+    timeCopyBuffer = (1200000-TIMER3_TAR_R)/120 - timeFindTrigger;//used to see how long copying the buffer takes
 }
 
 

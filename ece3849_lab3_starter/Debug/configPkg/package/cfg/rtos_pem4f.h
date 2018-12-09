@@ -46,6 +46,24 @@ extern const ti_sysbios_knl_Task_Handle ButtonTask;
 #include <ti/sysbios/gates/GateHwi.h>
 extern const ti_sysbios_gates_GateHwi_Handle gateHwi0;
 
+#include <ti/sysbios/family/arm/m3/Hwi.h>
+extern const ti_sysbios_family_arm_m3_Hwi_Handle Capture;
+
+#include <ti/sysbios/knl/Semaphore.h>
+extern const ti_sysbios_knl_Semaphore_Handle SignalFreq;
+
+#include <ti/sysbios/knl/Clock.h>
+extern const ti_sysbios_knl_Clock_Handle FreqCLK;
+
+#include <ti/sysbios/knl/Task.h>
+extern const ti_sysbios_knl_Task_Handle FrequencyTask;
+
+#include <ti/sysbios/gates/GateHwi.h>
+extern const ti_sysbios_gates_GateHwi_Handle gateHwi1;
+
+#include <ti/sysbios/family/arm/m3/Hwi.h>
+extern const ti_sysbios_family_arm_m3_Hwi_Handle PWM;
+
 extern int xdc_runtime_Startup__EXECFXN__C;
 
 extern int xdc_runtime_Startup__RESETFXN__C;

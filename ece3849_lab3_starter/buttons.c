@@ -109,7 +109,7 @@ void ButtonInit(void)
     // initialize ADC0 peripheral
     SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0);
     uint32_t pll_frequency = SysCtlFrequencyGet(CRYSTAL_FREQUENCY);
-    uint32_t pll_divisor = (pll_frequency - 1) / (16 * ADC_SAMPLING_RATE) + 1; // round divisor up
+    uint32_t pll_divisor = (pll_frequency - 1) / (16 * ADC_SAMPLING_RATEB) + 1; // round divisor up
     gADCSamplingRate = pll_frequency / (16 * pll_divisor); // actual sampling rate may differ from ADC_SAMPLING_RATE
     ADCClockConfigSet(ADC0_BASE, ADC_CLOCK_SRC_PLL | ADC_CLOCK_RATE_FULL, pll_divisor); // only ADC0 has PLL clock divisor control
 

@@ -37,49 +37,9 @@ const int FIFO_SIZE = 11;//for some reason the compiler didn't like this as a #d
 volatile int butfifo_head = 0;
 volatile int butfifo_tail = 0;
 
-
-int fifo_put(DataType data){
-    int new_tail = butfifo_tail +1;
-    if(new_tail >= FIFO_SIZE){
-        new_tail = 0;
-    }
-    if(butfifo_head!= new_tail){
-        buttonfifo[butfifo_tail] = data;
-        butfifo_tail = new_tail;
-        return 1;
-    }
-    return 0;//full
-}
-
-int fifo_get(DataType *data){
-    if(butfifo_head != butfifo_tail){
-        *data = buttonfifo[butfifo_head];
-        if((butfifo_head) >= FIFO_SIZE-1){
-            butfifo_head = 0;
-        }
-        else{
-            butfifo_head++;
-        }
-        return 1;
-    }
-    return 0;
-}
-
 // initialize all button and joystick handling hardware
 void ButtonInit(void)
 {
-//    // initialize a general purpose timer for periodic interrupts
-//    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
-//    TimerDisable(TIMER0_BASE, TIMER_BOTH);
-//    TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC);
-//    TimerLoadSet(TIMER0_BASE, TIMER_A, (float)gSystemClock / BUTTON_SCAN_RATE - 0.5f);
-//    TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
-//    TimerEnable(TIMER0_BASE, TIMER_BOTH);
-
-//    // initialize interrupt controller to respond to timer interrupts
-//    IntPrioritySet(INT_TIMER0A, BUTTON_INT_PRIORITY);
-//    IntEnable(INT_TIMER0A);
-
     // GPIO PJ0 and PJ1 = EK-TM4C1294XL buttons 1 and 2
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOJ);
     GPIOPinTypeGPIOInput(GPIO_PORTJ_BASE, GPIO_PIN_0 | GPIO_PIN_1 );
@@ -190,37 +150,7 @@ uint32_t ButtonAutoRepeat(void)
     return presses;
 }
 
-// ISR for scanning and debouncing buttons
-void ButtonISR(void) {
-    TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT); // clear interrupt flag
-
-    // read hardware button state
-    uint32_t gpio_buttons =
-            ~GPIOPinRead(GPIO_PORTJ_BASE, 0xff) & (GPIO_PIN_1 | GPIO_PIN_0  ); // EK-TM4C1294XL buttons in positions 0 and 1
-    gpio_buttons = gpio_buttons|((~GPIOPinRead(GPIO_PORTH_BASE, 0xff)&GPIO_PIN_1)<<1);
-    gpio_buttons = gpio_buttons|((~GPIOPinRead(GPIO_PORTD_BASE, 0xff)&GPIO_PIN_4));
-    gpio_buttons = gpio_buttons|((~GPIOPinRead(GPIO_PORTK_BASE, 0xff)&GPIO_PIN_6)>>3);
-    uint32_t old_buttons = gButtons;    // save previous button state
-    ButtonDebounce(gpio_buttons);       // Run the button debouncer. The result is in gButtons.
-    ButtonReadJoystick();               // Convert joystick state to button presses. The result is in gButtons.
-    uint32_t presses = ~old_buttons & gButtons;   // detect button presses (transitions from not pressed to pressed)
-    presses |= ButtonAutoRepeat();      // autorepeat presses if a button is held long enough
-
-    static bool tic = false;
-    static bool running = true;
-    if(presses!=0){//adds to fifo if button is pressed
-
-
-    fifo_put(presses);
-    }
-
-    if (running) {
-        if (tic) gTime++; // increment time every other ISR call
-        tic = !tic;
-    }
-
-}
-
+//used by button task
 uint32_t getButtonPresses(void){
     // read hardware button state
       uint32_t gpio_buttons =
@@ -236,10 +166,8 @@ uint32_t getButtonPresses(void){
       return presses;
 }
 
-
-
+//Helper function called by the user-input task
 void HandleButtonPress(uint32_t presses){
-
         if (presses & 128) { //up on the analog stick, increment voltage state
                if(VoltageScale <3){
                    VoltageScale++;

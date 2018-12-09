@@ -64,10 +64,9 @@ int main(void)
     TimerDisable(TIMER3_BASE, TIMER_BOTH);
     TimerConfigure(TIMER3_BASE, TIMER_CFG_A_PERIODIC);
     TimerLoadSet(TIMER3_BASE, TIMER_A, gSystemClock/100-1); // .01 sec interval
-
+    count_unloaded = cpu_load_count();//measure cpu load with ints disabled
     Crystalfontz128x128_Init(); // Initialize the LCD display driver
     Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_UP); // set screen orientation
-    count_unloaded = cpu_load_count();//measure cpu load with ints disabled
     ButtonInit();
     initADC();//enable last so that the ADC doesnt have an error
 
